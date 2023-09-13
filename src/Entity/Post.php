@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -33,6 +35,14 @@ class Post
         options: ["default" => "CURRENT_TIMESTAMP"],
     )]
     private ?\DateTimeInterface $DatePost = null;
+
+    #[ORM\ManyToMany(targetEntity: Rubrique::class, inversedBy: 'm2mPost')]
+    private Collection $m2mRubrique;
+
+    public function __construct()
+    {
+        $this->m2mRubrique = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -83,6 +93,30 @@ class Post
     public function setDatePost(?\DateTimeInterface $DatePost): static
     {
         $this->DatePost = $DatePost;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rubrique>
+     */
+    public function getM2mRubrique(): Collection
+    {
+        return $this->m2mRubrique;
+    }
+
+    public function addM2mRubrique(Rubrique $m2mRubrique): static
+    {
+        if (!$this->m2mRubrique->contains($m2mRubrique)) {
+            $this->m2mRubrique->add($m2mRubrique);
+        }
+
+        return $this;
+    }
+
+    public function removeM2mRubrique(Rubrique $m2mRubrique): static
+    {
+        $this->m2mRubrique->removeElement($m2mRubrique);
 
         return $this;
     }
