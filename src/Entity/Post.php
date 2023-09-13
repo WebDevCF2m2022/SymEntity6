@@ -39,6 +39,9 @@ class Post
     #[ORM\ManyToMany(targetEntity: Rubrique::class, inversedBy: 'm2mPost')]
     private Collection $m2mRubrique;
 
+    #[ORM\ManyToOne(inversedBy: 'one2manyPost')]
+    private ?User $many2oneUser = null;
+
     public function __construct()
     {
         $this->m2mRubrique = new ArrayCollection();
@@ -117,6 +120,18 @@ class Post
     public function removeM2mRubrique(Rubrique $m2mRubrique): static
     {
         $this->m2mRubrique->removeElement($m2mRubrique);
+
+        return $this;
+    }
+
+    public function getMany2oneUser(): ?User
+    {
+        return $this->many2oneUser;
+    }
+
+    public function setMany2oneUser(?User $many2oneUser): static
+    {
+        $this->many2oneUser = $many2oneUser;
 
         return $this;
     }
